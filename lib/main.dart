@@ -30,21 +30,20 @@ class HomePage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background.png'),
+            image: AssetImage('assets/background4.png'),
             fit: BoxFit.cover,
           ),
         ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Set ke start
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 50), // Beri jarak di atas teks
               Text(
                 'Selamat datang di Monster Hunter!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 300),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
