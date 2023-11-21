@@ -24,9 +24,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Monster Hunter Official Website'),
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -38,12 +35,34 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Teks berpendar (glowing) dengan kontras yang diturunkan
               Text(
                 'Selamat datang di Monster Hunter!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Color.fromRGBO(255, 255, 255, 0.3), // Red, Green, Blue, Opacity
+                      offset: Offset(0, 0),
+                    ),
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Color.fromRGBO(255, 255, 255, 0.3),
+                      offset: Offset(0, 0),
+                    ),
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Color.fromRGBO(255, 255, 255, 0.3),
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 300),
+              SizedBox(height: 350),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
