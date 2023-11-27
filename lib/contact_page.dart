@@ -6,13 +6,14 @@ class ContactPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contact us'),
+        backgroundColor: Color(0xFF4e2208), // Ganti dengan warna yang sesuai
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Hubungi kami melalui email:',
+              'Contact us via email:',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 10),
@@ -22,7 +23,7 @@ class ContactPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'Ikuti kami di media sosial:',
+              'Follow us on social media:',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 5),
