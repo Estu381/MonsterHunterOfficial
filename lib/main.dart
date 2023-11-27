@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             children: <Widget>[
               // Teks berpendar (glowing) dengan kontras yang diturunkan
               Text(
-                'Selamat datang di Monster Hunter!',
+                'Selamat datang di Monster Hunter Official Web!',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
