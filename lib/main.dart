@@ -70,54 +70,34 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Teks berpendar (glowing) dengan kontras yang diturunkan
-              Text(
-                'Selamat datang di Monster Hunter Official Web!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Color.fromRGBO(255, 255, 255, 0.3), // Red, Green, Blue, Opacity
-                      offset: Offset(0, 0),
-                    ),
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Color.fromRGBO(255, 255, 255, 0.3),
-                      offset: Offset(0, 0),
-                    ),
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Color.fromRGBO(255, 255, 255, 0.3),
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
+              // Hapus teks "Selamat datang di Monster Hunter Official Web!"
+              // Text(
+              //   'Selamat datang di Monster Hunter Official Web!',
+              //   style: TextStyle(
+              //     fontSize: 24,
+              //     fontWeight: FontWeight.bold,
+              //     color: Colors.white,
+              //     shadows: [
+              //       Shadow(
+              //         blurRadius: 10.0,
+              //         color: Color.fromRGBO(255, 255, 255, 0.3),
+              //         offset: Offset(0, 0),
+              //       ),
+              //       Shadow(
+              //         blurRadius: 10.0,
+              //         color: Color.fromRGBO(255, 255, 255, 0.3),
+              //         offset: Offset(0, 0),
+              //       ),
+              //       Shadow(
+              //         blurRadius: 10.0,
+              //         color: Color.fromRGBO(255, 255, 255, 0.3),
+              //         offset: Offset(0, 0),
+              //       ),
+              //     ],
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
               SizedBox(height: 350),
-              // Tetap gunakan ElevatedButton untuk tampilan yang konsisten
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AboutPage()),
-                  );
-                },
-                child: Text('About'),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ContactPage()),
-                  );
-                },
-                child: Text('Contact'),
-              ),
             ],
           ),
         ),
