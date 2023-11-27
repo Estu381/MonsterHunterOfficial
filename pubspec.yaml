@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   cached_network_image: ^3.3.0
   youtube_player_flutter: ^8.0.0
+  carousel_slider: ^4.0.0
 
 
 
@@ -63,6 +64,7 @@ flutter:
     - assets/monsterhunterlogo.png
     - assets/mh.png
     - assets/mhlogofix.png
+    - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
