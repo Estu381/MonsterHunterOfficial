@@ -24,6 +24,41 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        backgroundColor: Color(0xFF4E2208), // Ganti dengan warna yang diinginkan
+        leading: Image.asset(
+          'assets/mhlogofix.png', // Ganti dengan path ke gambar Anda
+          width: 40, // Sesuaikan lebar gambar
+          height: 40, // Sesuaikan tinggi gambar
+        ),
+        actions: [
+          Tooltip(
+            message: 'About',
+            child: IconButton(
+              icon: Icon(Icons.notifications), // Ganti dengan ikon lonceng
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutPage()),
+                );
+              },
+            ),
+          ),
+          Tooltip(
+            message: 'Contact',
+            child: IconButton(
+              icon: Icon(Icons.phone), // Ganti dengan ikon telepon
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ContactPage()),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -63,6 +98,7 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 350),
+              // Tetap gunakan ElevatedButton untuk tampilan yang konsisten
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -70,7 +106,7 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AboutPage()),
                   );
                 },
-                child: Text('Tentang Kami'),
+                child: Text('About'),
               ),
               SizedBox(height: 10),
               ElevatedButton(
@@ -80,7 +116,7 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ContactPage()),
                   );
                 },
-                child: Text('Hubungi Kami'),
+                child: Text('Contact'),
               ),
             ],
           ),
