@@ -49,6 +49,31 @@ class _HomePageState extends State<HomePage> {
     // ... tambahkan path gambar game yang lain sesuai kebutuhan
   ];
 
+  final List<String> newsImages = [
+    'assets/news1.png',
+    'assets/news2.png',
+    'assets/news3.png',
+    'assets/news4.png',
+    'assets/news5.png',
+    // ... tambahkan path gambar berita yang lain sesuai kebutuhan
+  ];
+
+  final List<String> newsContents = [
+    'New design coming to official Capcom apparel on Amazon!',
+    'Vote for your favorite monster in the Hunters choice (Top Monster)!',
+    'Monster Hunter Rise: Sunbreak All Title Update Out Now!',
+    'MONSTER HUNTER RISE (Xbox Series X|S/Xbox One/Windows/PS5/PS4) ',
+    'Monster Hunter Rise: Sunbreak Roadmap Free Title Updates',
+  ];
+
+  final List<String> newsHeadlines = [
+    'Latest News Headline 1',
+    'Latest News Headline 2',
+    'Latest News Headline 3',
+    'Latest News Headline 4',
+    'Latest News Headline 5',
+  ];
+
   late PageController _pageController;
   int _currentPage = 0;
 
@@ -150,7 +175,6 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white, // Warna teks putih
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
-
                   ),
                 ),
               ),
@@ -168,17 +192,104 @@ class _HomePageState extends State<HomePage> {
                 ),
                 itemCount: gameImages.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width / 3 - 16.0,
-                    height: MediaQuery.of(context).size.width / 3 - 16.0,
-                    child: Image.asset(
-                      gameImages[index],
-                      fit: BoxFit.contain,
+                  return GestureDetector(
+                    onTap: () {
+                      // Implementasi aksi saat gambar game diklik
+                      print('Game ${index + 1} clicked!');
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 3 - 16.0,
+                      height: MediaQuery.of(context).size.width / 3 - 16.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            gameImages[index],
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(height: 8.0), // Spasi antara gambar dan teks
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
             ),
+            // Teks "NEWS" di bawah gambar game
+            Container(
+              color: Colors.black,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: Text(
+                  '**NEWS**',
+                  style: TextStyle(
+                    color: Colors.white, // Warna teks putih
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            // Kartu "NEWS" dengan lebar 5 dan drop shadow
+            Container(
+              margin: EdgeInsets.all(16.0),
+              child: Column(
+                children: List.generate(5, (index) {
+                  String newsImage = newsImages[index % newsImages.length]; // Siklus gambar berita yang berbeda
+                  return GestureDetector(
+                    onTap: () {
+                      // Implementasi aksi saat kartu berita diklik
+                      print('News ${index + 1} clicked!');
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 16.0),
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              newsImage,
+                              width: 200.0,
+                              height: 150.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            '',
+                            // style: TextStyle(
+                            //   fontSize: 20.0,
+                            //   fontWeight: FontWeight.bold,
+                            // ),
+                          ),
+
+                          SizedBox(height: 8.0),
+                          Text(
+                            newsContents[index],
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          // Add any other content or widgets related to news
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+
             // Konten lainnya di bawah slideshow
             Container(
               color: Colors.black,
@@ -194,6 +305,69 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Color(0xFF4E2208), // Warna latar belakang BottomAppBar
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // Navigasi ke halaman copyright
+                  print('Copyright clicked!');
+                },
+                child: Text(
+                  'Copyright',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigasi ke halaman terms
+                  print('Terms clicked!');
+                },
+                child: Text(
+                  'Terms',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigasi ke halaman privacy policy
+                  print('Privacy Policy clicked!');
+                },
+                child: Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigasi ke halaman cookie policy
+                  print('Cookie Policy clicked!');
+                },
+                child: Text(
+                  'Cookie Policy',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
