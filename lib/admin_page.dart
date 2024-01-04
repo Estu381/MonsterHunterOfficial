@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'register_page.dart'; // Import file register_page.dart
 
 class AdminPage extends StatefulWidget {
   final List<String> slideImages;
-  final List<String> gameImages; // Tambahkan gameImages ke constructor
+  final List<String> gameImages;
 
   const AdminPage({Key? key, required this.slideImages, required this.gameImages}) : super(key: key);
 
@@ -15,7 +16,6 @@ class _AdminPageState extends State<AdminPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController adminIdController = TextEditingController();
-
   TextEditingController newSlideImageController = TextEditingController();
   TextEditingController newGameImageController = TextEditingController();
   TextEditingController newsIndexController = TextEditingController();
@@ -64,9 +64,10 @@ class _AdminPageState extends State<AdminPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextField(
-            controller: adminIdController, // Tambahkan controller untuk admin_id
+            controller: adminIdController,
             decoration: InputDecoration(labelText: 'Admin ID'),
-          ),  TextField(
+          ),
+          TextField(
             controller: usernameController,
             decoration: InputDecoration(labelText: 'Username'),
           ),
@@ -77,14 +78,27 @@ class _AdminPageState extends State<AdminPage> {
             decoration: InputDecoration(labelText: 'Password'),
           ),
           SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              // Simulate login, set isLoggedIn to true
-              setState(() {
-                isLoggedIn = true;
-              });
-            },
-            child: Text('Login'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    isLoggedIn = true;
+                  });
+                },
+                child: Text('Login'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()), // Hapus adminIdList
+                  );
+                },
+                child: Text('Register Here'),
+              ),
+            ],
           ),
         ],
       ),
@@ -104,7 +118,6 @@ class _AdminPageState extends State<AdminPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           // Update Slideshow Image
           TextField(
             controller: newSlideImageController,
@@ -113,45 +126,37 @@ class _AdminPageState extends State<AdminPage> {
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              // Update the slideshow image
               setState(() {
                 int index = _currentPage % widget.slideImages.length;
                 widget.slideImages[index] = 'assets/${newSlideImageController.text}';
-                // Set the current page to 0 to force a rebuild of the PageView
                 _currentPage = 0;
               });
 
-              // Tampilkan snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Gambar di Slideshow sudah ditambahkan!'),
+                  content: Text('Slideshow image added!'),
                 ),
               );
             },
-            child: Text('Tambahkan Gambar Slideshow'),
+            child: Text('Add Slideshow Image'),
           ),
-
           // Delete Slideshow Image
           ElevatedButton(
             onPressed: () {
-              // Delete the current slideshow image
               setState(() {
                 int index = _currentPage % widget.slideImages.length;
                 widget.slideImages.removeAt(index);
-                // Set the current page to 0 to force a rebuild of the PageView
                 _currentPage = 0;
               });
 
-              // Tampilkan snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Gambar di Slideshow sudah dihapus!'),
+                  content: Text('Slideshow image deleted!'),
                 ),
               );
             },
-            child: Text('Hapus Gambar Slideshow'),
+            child: Text('Delete Slideshow Image'),
           ),
-
           // Update Game Images
           TextField(
             controller: newGameImageController,
@@ -160,43 +165,35 @@ class _AdminPageState extends State<AdminPage> {
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              // Add new game image
               setState(() {
                 widget.gameImages.add('assets/${newGameImageController.text}');
               });
 
-              // Tampilkan snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Gambar di OUR GAMES sudah ditambahkan!'),
+                  content: Text('Game image added!'),
                 ),
               );
             },
-            child: Text('Tambahkan Gambar OUR GAMES'),
+            child: Text('Add Game Image'),
           ),
-
           // Delete Game Image
           ElevatedButton(
             onPressed: () {
-              // Delete the last game image
               setState(() {
                 if (widget.gameImages.isNotEmpty) {
                   widget.gameImages.removeLast();
                 }
               });
 
-              // Tampilkan snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Gambar di OUR GAMES sudah dihapus!'),
+                  content: Text('Game image deleted!'),
                 ),
               );
             },
-            child: Text('Hapus Gambar OUR GAMES'),
+            child: Text('Delete Game Image'),
           ),
-
-          // ... (code for updating news images)
-
         ],
       ),
     );
