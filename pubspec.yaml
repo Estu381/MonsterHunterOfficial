@@ -51,6 +51,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -65,6 +67,7 @@ flutter:
     - assets/monsterhunterlogo.png
     - assets/mh.png
     - assets/mhlogofix.png
+    - assets/mhwild.png
     - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mhofficial/admin_page.dart';
 import 'about_page.dart'; // Import AboutPage
 import 'contact_page.dart'; // Import ContactPage
 
@@ -33,9 +34,8 @@ class _HomePageState extends State<HomePage> {
     'assets/slide3.png',
     'assets/slide4.png',
     'assets/slide5.png',
-    'assets/slide6.png',
-    'assets/slide7.png',
-    'assets/slide8.png',
+
+
   ];
 
   final List<String> gameImages = [
@@ -120,6 +120,24 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(builder: (context) => AboutPage()),
                 );
+              },
+            ),
+          ),
+          Tooltip(
+            message: 'About',
+            child: IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminPage(
+                      slideImages: slideImages,
+                      gameImages: gameImages, // Pastikan parameter ini diisi
+                    ),
+                  ),
+                );
+
               },
             ),
           ),
