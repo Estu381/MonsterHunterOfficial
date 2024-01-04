@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   final List<String> adminIdList;
@@ -14,6 +16,53 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  Future<void> register() async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2/flutter_api/register.php'),
+
+      body: {
+        'admin_id': adminIdController.text,
+        'username': usernameController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    // Tambahkan output log untuk melihat respons dari server
+    print('Response: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status'] == 'success') {
+        // Registrasi berhasil, tambahkan admin_id ke daftar
+        widget.adminIdList.add(adminIdController.text);
+
+        // Tampilkan pesan sukses
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration successful!'),
+          ),
+        );
+
+        // Kembali ke halaman sebelumnya (AdminPage)
+        Navigator.pop(context);
+      } else {
+        // Tampilkan pesan error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message']),
+          ),
+        );
+      }
+    } else {
+      // Tampilkan pesan error jika gagal terhubung ke server
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to connect to the server.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             TextField(
               controller: adminIdController,
-              decoration: InputDecoration(labelText: 'Admin ID (code given by the company)'),
+              decoration: InputDecoration(labelText: 'Admin ID'),
             ),
             TextField(
               controller: usernameController,
@@ -43,22 +92,18 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Handle registration logic
-                String enteredAdminId = adminIdController.text;
-                if (!widget.adminIdList.contains(enteredAdminId)) {
-                  widget.adminIdList.add(enteredAdminId);
+                // Validasi form sebelum melakukan registrasi
+                if (adminIdController.text.isEmpty ||
+                    usernameController.text.isEmpty ||
+                    passwordController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Registration successful!'),
+                      content: Text('Please fill in all fields.'),
                     ),
                   );
-                  Navigator.pop(context); // Close the registration page
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Admin ID already exists!'),
-                    ),
-                  );
+                  // Lakukan registrasi jika formulir sudah terisi
+                  register();
                 }
               },
               child: Text('Register'),
