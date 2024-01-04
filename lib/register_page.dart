@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
+  final List<String> adminIdList;
+
+  const RegisterPage({Key? key, required this.adminIdList}) : super(key: key);
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -40,12 +44,22 @@ class _RegisterPageState extends State<RegisterPage> {
             ElevatedButton(
               onPressed: () {
                 // Handle registration logic
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Registration successful!'),
-                  ),
-                );
-                Navigator.pop(context); // Tutup halaman registrasi
+                String enteredAdminId = adminIdController.text;
+                if (!widget.adminIdList.contains(enteredAdminId)) {
+                  widget.adminIdList.add(enteredAdminId);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Registration successful!'),
+                    ),
+                  );
+                  Navigator.pop(context); // Close the registration page
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Admin ID already exists!'),
+                    ),
+                  );
+                }
               },
               child: Text('Register'),
             ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'register_page.dart'; // Import file register_page.dart
+import 'register_page.dart';
 
 class AdminPage extends StatefulWidget {
   final List<String> slideImages;
@@ -24,10 +24,18 @@ class _AdminPageState extends State<AdminPage> {
   late PageController _pageController;
   int _currentPage = 0;
 
+  List<String> adminIdList = []; // Add this line
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
+  }
+
+  bool validateLogin() {
+    // Add your login validation logic here
+    // For simplicity, it returns true for demonstration purposes
+    return true;
   }
 
   @override
@@ -83,9 +91,26 @@ class _AdminPageState extends State<AdminPage> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    isLoggedIn = true;
-                  });
+                  String enteredAdminId = adminIdController.text;
+                  if (adminIdList.contains(enteredAdminId)) {
+                    if (validateLogin()) {
+                      setState(() {
+                        isLoggedIn = true;
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Invalid login credentials!'),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Invalid Admin ID!'),
+                      ),
+                    );
+                  }
                 },
                 child: Text('Login'),
               ),
@@ -93,7 +118,9 @@ class _AdminPageState extends State<AdminPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()), // Hapus adminIdList
+                    MaterialPageRoute(
+                      builder: (context) => RegisterPage(adminIdList: adminIdList),
+                    ),
                   );
                 },
                 child: Text('Register Here'),
