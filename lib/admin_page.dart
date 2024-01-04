@@ -33,8 +33,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   bool validateLogin() {
-    // Add your login validation logic here
-    // For simplicity, it returns true for demonstration purposes
+    // Remove any login validation logic and always return true
     return true;
   }
 
@@ -91,26 +90,27 @@ class _AdminPageState extends State<AdminPage> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  String enteredAdminId = adminIdController.text;
-                  if (adminIdList.contains(enteredAdminId)) {
-                    if (validateLogin()) {
-                      setState(() {
-                        isLoggedIn = true;
-                      });
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Invalid login credentials!'),
-                        ),
-                      );
-                    }
+                  // Remove ID admin checking
+                  // String enteredAdminId = adminIdController.text;
+                  // if (adminIdList.contains(enteredAdminId)) {
+                  if (validateLogin()) {
+                    setState(() {
+                      isLoggedIn = true;
+                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Invalid Admin ID!'),
+                        content: Text('Invalid login credentials!'),
                       ),
                     );
                   }
+                  // } else {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       content: Text('Invalid Admin ID!'),
+                  //     ),
+                  //   );
+                  // }
                 },
                 child: Text('Login'),
               ),
