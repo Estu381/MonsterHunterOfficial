@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'register_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -13,18 +15,14 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   bool isLoggedIn = false;
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   TextEditingController adminIdController = TextEditingController();
   TextEditingController newSlideImageController = TextEditingController();
   TextEditingController newGameImageController = TextEditingController();
-  TextEditingController newsIndexController = TextEditingController();
-  TextEditingController newNewsImageController = TextEditingController();
 
   late PageController _pageController;
   int _currentPage = 0;
 
-  List<String> adminIdList = []; // Add this line
+  List<String> adminIdList = [];
 
   @override
   void initState() {
@@ -74,25 +72,12 @@ class _AdminPageState extends State<AdminPage> {
             controller: adminIdController,
             decoration: InputDecoration(labelText: 'Admin ID'),
           ),
-          TextField(
-            controller: usernameController,
-            decoration: InputDecoration(labelText: 'Username'),
-          ),
-          SizedBox(height: 16.0),
-          TextField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: InputDecoration(labelText: 'Password'),
-          ),
           SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Remove ID admin checking
-                  // String enteredAdminId = adminIdController.text;
-                  // if (adminIdList.contains(enteredAdminId)) {
                   if (validateLogin()) {
                     setState(() {
                       isLoggedIn = true;
@@ -104,13 +89,6 @@ class _AdminPageState extends State<AdminPage> {
                       ),
                     );
                   }
-                  // } else {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       content: Text('Invalid Admin ID!'),
-                  //     ),
-                  //   );
-                  // }
                 },
                 child: Text('Login'),
               ),
@@ -153,34 +131,14 @@ class _AdminPageState extends State<AdminPage> {
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                int index = _currentPage % widget.slideImages.length;
-                widget.slideImages[index] = 'assets/${newSlideImageController.text}';
-                _currentPage = 0;
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Slideshow image added!'),
-                ),
-              );
+              _addSlideshowImage();
             },
             child: Text('Add Slideshow Image'),
           ),
           // Delete Slideshow Image
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                int index = _currentPage % widget.slideImages.length;
-                widget.slideImages.removeAt(index);
-                _currentPage = 0;
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Slideshow image deleted!'),
-                ),
-              );
+              _deleteSlideshowImage();
             },
             child: Text('Delete Slideshow Image'),
           ),
@@ -192,37 +150,82 @@ class _AdminPageState extends State<AdminPage> {
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                widget.gameImages.add('assets/${newGameImageController.text}');
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Game image added!'),
-                ),
-              );
+              _addGameImage();
             },
             child: Text('Add Game Image'),
           ),
           // Delete Game Image
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                if (widget.gameImages.isNotEmpty) {
-                  widget.gameImages.removeLast();
-                }
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Game image deleted!'),
-                ),
-              );
+              _deleteGameImage();
             },
             child: Text('Delete Game Image'),
           ),
         ],
       ),
     );
+  }
+
+  void _addSlideshowImage() async {
+    try {
+      var response = await http.post(
+        Uri.parse('http://192.168.100.65/flutter_api/api.php?action=add_slide_image'),
+        body: {'new_slide_image': newSlideImageController.text},
+      );
+
+      print(response.body);
+      print(response.statusCode);
+
+
+      _handleApiResponse(response, 'Slideshow image added!');
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+
+      );
+
+    }
+  }
+
+  void _deleteSlideshowImage() async {
+    // Implementasi penghapusan gambar slideshow dari database di sini (sesuai kebutuhan)
+  }
+
+  void _addGameImage() async {
+    // Implementasi penambahan gambar game ke database di sini (sesuai kebutuhan)
+  }
+
+  void _deleteGameImage() async {
+    // Implementasi penghapusan gambar game dari database di sini (sesuai kebutuhan)
+  }
+
+  void _handleApiResponse(http.Response response, String successMessage) {
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['success'] == true) {
+        setState(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(successMessage),
+            ),
+          );
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed. ${data['message']}'),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to communicate with the server.'),
+        ),
+      );
+    }
   }
 }
