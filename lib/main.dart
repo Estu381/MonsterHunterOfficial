@@ -34,8 +34,6 @@ class _HomePageState extends State<HomePage> {
     'assets/slide3.png',
     'assets/slide4.png',
     'assets/slide5.png',
-
-
   ];
 
   final List<String> gameImages = [
@@ -58,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     // ... tambahkan path gambar berita yang lain sesuai kebutuhan
   ];
 
-  final List<String> newsContents = [
+  final List<String> editableNewsContents = [
     'New design coming to official Capcom apparel on Amazon!',
     'Vote for your favorite monster in the Hunters choice (Top Monster)!',
     'Monster Hunter Rise: Sunbreak All Title Update Out Now!',
@@ -137,7 +135,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 );
-
               },
             ),
           ),
@@ -277,26 +274,63 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                            child: Image.asset(
-                              newsImage,
-                              width: 200.0,
-                              height: 150.0,
-                              fit: BoxFit.cover,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  newsImage,
+                                  width: 200.0,
+                                  height: 150.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              // Tombol Edit
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  // Open a dialog for editing the news content
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      String editedContent = editableNewsContents[index];
+                                      return AlertDialog(
+                                        title: Text('Edit News'),
+                                        content: TextField(
+                                          onChanged: (value) {
+                                            editedContent = value;
+                                          },
+                                          controller: TextEditingController(text: editableNewsContents[index]),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              // Save the edited content
+                                              setState(() {
+                                                editableNewsContents[index] = editedContent;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Save'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              // Close the dialog without saving changes
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            '',
-                            // style: TextStyle(
-                            //   fontSize: 20.0,
-                            //   fontWeight: FontWeight.bold,
-                            // ),
-                          ),
-
-                          SizedBox(height: 8.0),
-                          Text(
-                            newsContents[index],
+                            editableNewsContents[index],
                             style: TextStyle(fontSize: 16.0),
                           ),
                           // Add any other content or widgets related to news
@@ -307,7 +341,6 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
             ),
-
             // Konten lainnya di bawah slideshow
             Container(
               color: Colors.black,

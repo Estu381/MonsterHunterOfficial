@@ -169,7 +169,7 @@ class _AdminPageState extends State<AdminPage> {
   void _addSlideshowImage() async {
     try {
       var response = await http.post(
-        Uri.parse('http://192.168.100.65/flutter_api/api.php?action=add_slide_image'),
+        Uri.parse('http://192.168.227.206/flutter_api/api.php?action=add_slide_image'),
         body: {'new_slide_image': newSlideImageController.text},
       );
 

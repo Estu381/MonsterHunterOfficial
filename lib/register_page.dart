@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             TextField(
               controller: adminIdController,
-              decoration: InputDecoration(labelText: 'Admin ID'),
+              decoration: InputDecoration(labelText: 'Admin ID (from company)'),
             ),
             TextField(
               controller: usernameController,
