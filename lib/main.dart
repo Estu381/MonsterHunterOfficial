@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mhofficial/admin_page.dart';
-import 'about_page.dart'; // Import AboutPage
-import 'contact_page.dart'; // Import ContactPage
-import 'package:flutter/material.dart';
+import 'about_page.dart';
+import 'contact_page.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
@@ -36,8 +35,6 @@ class _HomePageState extends State<HomePage> {
     'assets/slide3.png',
     'assets/slide4.png',
     'assets/slide5.png',
-
-
   ];
 
   final List<String> gameImages = [
@@ -105,7 +102,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('Monster Hunter Official Website'),
         backgroundColor: Color(0xFF4E2208),
         leading: Image.asset(
           'assets/mhlogofix.png',
@@ -126,20 +123,24 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Tooltip(
-            message: 'About',
+            message: 'Admin',
             child: IconButton(
               icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                // Navigasi ke halaman AdminPage dan tunggu hasilnya
+                final newSlideImage = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AdminPage(
-                      slideImages: slideImages,
-                      gameImages: gameImages, // Pastikan parameter ini diisi
-                    ),
+                    builder: (context) => AdminPage(slideImages: slideImages, gameImages: gameImages),
                   ),
                 );
 
+                // Jika ada gambar baru, tambahkan ke daftar gambar slide
+                if (newSlideImage != null && newSlideImage is String) {
+                  setState(() {
+                    slideImages.add(newSlideImage);
+                  });
+                }
               },
             ),
           ),
@@ -163,13 +164,13 @@ class _HomePageState extends State<HomePage> {
             // Slideshow menggunakan PageView
             Container(
               height: 185.0,
-              color: Colors.purple[100], // Warna latar belakang purple light
+              color: Colors.purple[100],
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: slideImages.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    width: MediaQuery.of(context).size.width, // Lebar layar
+                    width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.symmetric(horizontal: 0.0),
                     child: Image.asset(
                       slideImages[index],
@@ -289,13 +290,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            '',
-                            // style: TextStyle(
-                            //   fontSize: 20.0,
-                            //   fontWeight: FontWeight.bold,
-                            // ),
+                            newsHeadlines[index], // Tampilkan headline
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-
                           SizedBox(height: 8.0),
                           Text(
                             newsContents[index],

@@ -61,6 +61,9 @@ class _AdminPageState extends State<AdminPage> {
       print(response.statusCode);
 
       _handleApiResponse(response, 'Slideshow image added!');
+
+      // Setelah berhasil menambahkan gambar, kirim kembali gambar tersebut ke halaman sebelumnya (MyHomePage)
+      Navigator.pop(context, newSlideImageController.text);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -108,7 +111,6 @@ class _AdminPageState extends State<AdminPage> {
       );
     }
   }
-
 
   void _addGameImage() async {
     try {
@@ -326,12 +328,13 @@ class _AdminPageState extends State<AdminPage> {
               _deleteGameImage();
             },
             child: Text('Delete Game Image'),
-          ),SizedBox(height: 16.0),
+          ),
+          SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
               _editGame();
             },
-            child: Text('edit news text'),
+            child: Text('Edit News Text'),
           ),
         ],
       ),
