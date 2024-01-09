@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mhofficial/admin_page.dart';
 import 'about_page.dart'; // Import AboutPage
 import 'contact_page.dart'; // Import ContactPage
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MyApp());

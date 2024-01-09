@@ -31,11 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   font_awesome_flutter: ^9.2.0
   cupertino_icons: ^1.0.2
   cached_network_image: ^3.3.0
   youtube_player_flutter: ^8.0.0
   carousel_slider: ^4.0.0
+  http: ^0.13.3
+  image_picker: ^1.0.7
 
 
 

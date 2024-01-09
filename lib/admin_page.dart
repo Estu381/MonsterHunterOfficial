@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'register_page.dart';
 import 'edit.dart';
 
@@ -35,6 +37,159 @@ class _AdminPageState extends State<AdminPage> {
   bool validateLogin() {
     // Remove any login validation logic and always return true
     return true;
+  }
+
+  Future<void> _pickImage(TextEditingController controller) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        controller.text = pickedFile.path;
+      });
+    }
+  }
+
+  void _addSlideshowImage() async {
+    try {
+      var response = await http.post(
+        Uri.parse('http://192.168.227.206/flutter_api/api.php?action=add_slide_image'),
+        body: {'new_slide_image': newSlideImageController.text},
+      );
+
+      print(response.body);
+      print(response.statusCode);
+
+      _handleApiResponse(response, 'Slideshow image added!');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    }
+  }
+
+  void _deleteSlideshowImage() {
+    try {
+      if (newSlideImageController.text.isNotEmpty) {
+        // Hapus gambar dari penyimpanan lokal
+        File imageFile = File(newSlideImageController.text);
+        if (imageFile.existsSync()) {
+          imageFile.deleteSync();
+
+          // Setelah menghapus dari penyimpanan lokal, reset nilai controller
+          newSlideImageController.text = '';
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Slideshow image deleted locally!'),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Slideshow image not found locally.'),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No slideshow image selected for deletion.'),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    }
+  }
+
+
+  void _addGameImage() async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://10.10.25.27/flutter_api/api.php?action=add_game_image'),
+      );
+
+      request.files.add(await http.MultipartFile.fromPath('new_game_image', newGameImageController.text));
+
+      var response = await request.send();
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+
+      print(responseString);
+
+      _handleApiResponse(http.Response(responseString, response.statusCode), 'Game image added!');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    }
+  }
+
+  void _deleteGameImage() async {
+    try {
+      var response = await http.post(
+        Uri.parse('http://192.168.227.206/flutter_api/api.php?action=delete_game_image'),
+        body: {'game_image_path': newGameImageController.text},
+      );
+
+      print(response.body);
+      print(response.statusCode);
+
+      _handleApiResponse(response, 'Game image deleted!');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    }
+  }
+
+  void _editGame() async {
+    // Implementasi edit game
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => edit(),
+      ),
+    );
+  }
+
+  void _handleApiResponse(http.Response response, String successMessage) {
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['success'] == true) {
+        setState(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(successMessage),
+            ),
+          );
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed. ${data['message']}'),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to communicate with the server. ${response.reasonPhrase}'),
+        ),
+      );
+    }
   }
 
   @override
@@ -84,15 +239,27 @@ class _AdminPageState extends State<AdminPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  if (validateLogin()) {
+                onPressed: () async {
+                  // Perform login validation
+                  if (await validateLogin()) {
+                    // Set isLoggedIn to true if login is successful
                     setState(() {
                       isLoggedIn = true;
                     });
+
+                    // Show a success notification
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Login successful!'),
+                        backgroundColor: Colors.green, // Customize the background color
+                      ),
+                    );
                   } else {
+                    // Show a snackbar for invalid login credentials
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Invalid login credentials!'),
+                        backgroundColor: Colors.red, // Customize the background color
                       ),
                     );
                   }
@@ -131,18 +298,14 @@ class _AdminPageState extends State<AdminPage> {
             ),
           ),
           // Update Slideshow Image
-          TextField(
-            controller: newSlideImageController,
-            decoration: InputDecoration(labelText: 'New Slideshow Image (e.g., mhwild.png)'),
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
+          _buildImagePicker(
+            'New Slideshow Image',
+            newSlideImageController,
+                () {
               _addSlideshowImage();
             },
-            child: Text('Add Slideshow Image'),
           ),
-          // Delete Slideshow Image
+          SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
               _deleteSlideshowImage();
@@ -150,107 +313,60 @@ class _AdminPageState extends State<AdminPage> {
             child: Text('Delete Slideshow Image'),
           ),
           // Update Game Images
-          TextField(
-            controller: newGameImageController,
-            decoration: InputDecoration(labelText: 'New Game Image (e.g., mhgu.png)'),
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
+          _buildImagePicker(
+            'New Game Image',
+            newGameImageController,
+                () {
               _addGameImage();
             },
-            child: Text('Add Game Image'),
           ),
           SizedBox(height: 16.0),
-
-          // Delete Game Image
           ElevatedButton(
             onPressed: () {
               _deleteGameImage();
             },
             child: Text('Delete Game Image'),
-          ),
+          ),SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => edit(),
-                ),
-              );
+              _editGame();
             },
             child: Text('edit news text'),
           ),
-
         ],
       ),
     );
   }
 
-  void _addSlideshowImage() async {
-    try {
-      var response = await http.post(
-        Uri.parse('http://10.10.25.27/flutter_api/api.php?action=add_slide_image'),
-        body: {'new_slide_image': newSlideImageController.text},
-      );
-
-      print(response.body);
-      print(response.statusCode);
-
-
-      _handleApiResponse(response, 'Slideshow image added!');
-    } catch (e) {
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: $e'),
+  Widget _buildImagePicker(String labelText, TextEditingController controller, VoidCallback onPressed) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(labelText),
+        SizedBox(height: 8.0),
+        controller.text.isNotEmpty
+            ? Image.file(
+          File(controller.text),
+          height: 100,
+        )
+            : ElevatedButton(
+          onPressed: () {
+            _pickImage(controller);
+          },
+          child: Text('Pick Image'),
         ),
-
-      );
-
-    }
-  }
-
-  void _deleteSlideshowImage() async {
-    // Implementasi penghapusan gambar slideshow dari database di sini (sesuai kebutuhan)
-  }
-
-  void _addGameImage() async {
-    // Implementasi penambahan gambar game ke database di sini (sesuai kebutuhan)
-  }
-
-  void _editGame() async {
-    await edit();
-  }
-
-  void _deleteGameImage() async {
-    // Implementasi penghapusan gambar game dari database di sini (sesuai kebutuhan)
-  }
-
-  void _handleApiResponse(http.Response response, String successMessage) {
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      if (data['success'] == true) {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(successMessage),
-            ),
-          );
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed. ${data['message']}'),
-          ),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to communicate with the server.'),
+        SizedBox(height: 8.0),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(labelText: 'Image Path'),
+          readOnly: true,
         ),
-      );
-    }
+        SizedBox(height: 8.0),
+        ElevatedButton(
+          onPressed: onPressed,
+          child: Text('Upload Image'),
+        ),
+      ],
+    );
   }
 }
