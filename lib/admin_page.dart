@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'register_page.dart';
+import 'edit.dart';
 
 class AdminPage extends StatefulWidget {
   final List<String> slideImages;
@@ -15,7 +16,8 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   bool isLoggedIn = false;
-  TextEditingController adminIdController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   TextEditingController newSlideImageController = TextEditingController();
   TextEditingController newGameImageController = TextEditingController();
 
@@ -69,8 +71,13 @@ class _AdminPageState extends State<AdminPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextField(
-            controller: adminIdController,
-            decoration: InputDecoration(labelText: 'Admin ID'),
+            controller: usernameController,
+            decoration: InputDecoration(labelText: 'Username'),
+          ),
+          TextField(
+            controller: passwordController,
+            decoration: InputDecoration(labelText: 'Password'),
+            obscureText: true,
           ),
           SizedBox(height: 16.0),
           Row(
@@ -154,6 +161,8 @@ class _AdminPageState extends State<AdminPage> {
             },
             child: Text('Add Game Image'),
           ),
+          SizedBox(height: 16.0),
+
           // Delete Game Image
           ElevatedButton(
             onPressed: () {
@@ -161,6 +170,18 @@ class _AdminPageState extends State<AdminPage> {
             },
             child: Text('Delete Game Image'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => edit(),
+                ),
+              );
+            },
+            child: Text('edit news text'),
+          ),
+
         ],
       ),
     );
@@ -169,7 +190,7 @@ class _AdminPageState extends State<AdminPage> {
   void _addSlideshowImage() async {
     try {
       var response = await http.post(
-        Uri.parse('http://192.168.227.206/flutter_api/api.php?action=add_slide_image'),
+        Uri.parse('http://10.10.25.27/flutter_api/api.php?action=add_slide_image'),
         body: {'new_slide_image': newSlideImageController.text},
       );
 
@@ -196,6 +217,10 @@ class _AdminPageState extends State<AdminPage> {
 
   void _addGameImage() async {
     // Implementasi penambahan gambar game ke database di sini (sesuai kebutuhan)
+  }
+
+  void _editGame() async {
+    await edit();
   }
 
   void _deleteGameImage() async {

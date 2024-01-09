@@ -12,7 +12,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController adminIdController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -21,7 +20,6 @@ class _RegisterPageState extends State<RegisterPage> {
       Uri.parse('http://10.0.2.2/flutter_api/register.php'),
 
       body: {
-        'admin_id': adminIdController.text,
         'username': usernameController.text,
         'password': passwordController.text,
       },
@@ -29,12 +27,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // Tambahkan output log untuk melihat respons dari server
     print('Response: ${response.body}');
+    final result = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      final result = json.decode(response.body);
       if (result['status'] == 'success') {
         // Registrasi berhasil, tambahkan admin_id ke daftar
-        widget.adminIdList.add(adminIdController.text);
+        // widget.adminIdList.add(adminIdController.text);
 
         // Tampilkan pesan sukses
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // Tampilkan pesan error jika gagal terhubung ke server
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to connect to the server.'),
+          content: Text(result['message']),
         ),
       );
     }
@@ -76,10 +74,6 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: adminIdController,
-              decoration: InputDecoration(labelText: 'Admin ID (from company)'),
-            ),
-            TextField(
               controller: usernameController,
               decoration: InputDecoration(labelText: 'Username'),
             ),
@@ -93,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ElevatedButton(
               onPressed: () {
                 // Validasi form sebelum melakukan registrasi
-                if (adminIdController.text.isEmpty ||
+                if (
                     usernameController.text.isEmpty ||
                     passwordController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(

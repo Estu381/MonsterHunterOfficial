@@ -4,38 +4,19 @@ import 'package:mhofficial/admin_page.dart';
 import 'about_page.dart'; // Import AboutPage
 import 'contact_page.dart'; // Import ContactPage
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
+class edit extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Monster Hunter Official Website',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
+  _editState createState() => _editState();
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class _editState extends State<edit> {
   final List<String> slideImages = [
     'assets/slide1.png',
     'assets/slide2.png',
     'assets/slide3.png',
     'assets/slide4.png',
     'assets/slide5.png',
-
-
   ];
 
   final List<String> gameImages = [
@@ -58,20 +39,12 @@ class _HomePageState extends State<HomePage> {
     // ... tambahkan path gambar berita yang lain sesuai kebutuhan
   ];
 
-  final List<String> newsContents = [
+  final List<String> editableNewsContents = [
     'New design coming to official Capcom apparel on Amazon!',
     'Vote for your favorite monster in the Hunters choice (Top Monster)!',
     'Monster Hunter Rise: Sunbreak All Title Update Out Now!',
     'MONSTER HUNTER RISE (Xbox Series X|S/Xbox One/Windows/PS5/PS4) ',
     'Monster Hunter Rise: Sunbreak Roadmap Free Title Updates',
-  ];
-
-  final List<String> newsHeadlines = [
-    'Latest News Headline 1',
-    'Latest News Headline 2',
-    'Latest News Headline 3',
-    'Latest News Headline 4',
-    'Latest News Headline 5',
   ];
 
   late PageController _pageController;
@@ -137,7 +110,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 );
-
               },
             ),
           ),
@@ -158,96 +130,6 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Slideshow menggunakan PageView
-            Container(
-              height: 185.0,
-              color: Colors.purple[100], // Warna latar belakang purple light
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: slideImages.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width, // Lebar layar
-                    margin: EdgeInsets.symmetric(horizontal: 0.0),
-                    child: Image.asset(
-                      slideImages[index],
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-              ),
-            ),
-            // Teks "OUR GAMES" di luar PageView pada latar belakang hitam
-            Container(
-              color: Colors.black,
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Center(
-                child: Text(
-                  '**OUR GAMES**',
-                  style: TextStyle(
-                    color: Colors.white, // Warna teks putih
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            // GridView untuk menampilkan gambar game dengan lebar 1/3 dari lebar layar
-            Container(
-              padding: EdgeInsets.all(16.0),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
-                ),
-                itemCount: gameImages.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      // Implementasi aksi saat gambar game diklik
-                      print('Game ${index + 1} clicked!');
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 3 - 16.0,
-                      height: MediaQuery.of(context).size.width / 3 - 16.0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            gameImages[index],
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(height: 8.0), // Spasi antara gambar dan teks
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            // Teks "NEWS" di bawah gambar game
-            Container(
-              color: Colors.black,
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Center(
-                child: Text(
-                  '**NEWS**',
-                  style: TextStyle(
-                    color: Colors.white, // Warna teks putih
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
             // Kartu "NEWS" dengan lebar 5 dan drop shadow
             Container(
               margin: EdgeInsets.all(16.0),
@@ -277,26 +159,63 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                            child: Image.asset(
-                              newsImage,
-                              width: 200.0,
-                              height: 150.0,
-                              fit: BoxFit.cover,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  newsImage,
+                                  width: 200.0,
+                                  height: 150.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              // Tombol Edit
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  // Open a dialog for editing the news content
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      String editedContent = editableNewsContents[index];
+                                      return AlertDialog(
+                                        title: Text('Edit News'),
+                                        content: TextField(
+                                          onChanged: (value) {
+                                            editedContent = value;
+                                          },
+                                          controller: TextEditingController(text: editableNewsContents[index]),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              // Save the edited content
+                                              setState(() {
+                                                editableNewsContents[index] = editedContent;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Save'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              // Close the dialog without saving changes
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            '',
-                            // style: TextStyle(
-                            //   fontSize: 20.0,
-                            //   fontWeight: FontWeight.bold,
-                            // ),
-                          ),
-
-                          SizedBox(height: 8.0),
-                          Text(
-                            newsContents[index],
+                            editableNewsContents[index],
                             style: TextStyle(fontSize: 16.0),
                           ),
                           // Add any other content or widgets related to news
@@ -307,7 +226,6 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
             ),
-
             // Konten lainnya di bawah slideshow
             Container(
               color: Colors.black,
