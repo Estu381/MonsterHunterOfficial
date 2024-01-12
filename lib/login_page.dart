@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'slideshow.dart';
+import 'ourgames.dart'; // Sesuaikan dengan path sebenarnya
+import 'news.dart'; // Sesuaikan dengan path sebenarnya
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,47 +18,66 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('Login Page'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Add your login logic here
-                _performLogin();
-              },
-              child: Text('Login'),
-            ),
-          ],
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Hapus inputan username
+              SizedBox(height: 16.0),
+              // Hapus inputan password
+              SizedBox(height: 16.0),
+              // Hapus tombol login
+
+              // Tambahkan tombol edit slideshow
+              ElevatedButton(
+                onPressed: () {
+                  // Navigasi ke HalamanSlideshow saat tombol "Edit Slideshow" ditekan
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SlideshowPage(slideImages: []),
+                    ),
+                  );
+                },
+                child: Text('Edit Slideshow'),
+              ),
+              SizedBox(height: 16.0),
+
+              // Tambahkan tombol edit our games
+              ElevatedButton(
+                onPressed: () {
+                  // Navigasi ke OurGamesPage saat tombol "Edit Our Games" ditekan
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OurGamesPage(),
+                    ),
+                  );
+                },
+                child: Text('Edit Our Games'),
+              ),
+              SizedBox(height: 16.0),
+
+              // Tambahkan tombol edit news
+              ElevatedButton(
+                onPressed: () {
+                  // Navigasi ke NewsPage saat tombol "Edit News" ditekan
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsPage(),
+                    ),
+                  );
+                },
+                child: Text('Edit News'),
+              ),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  void _performLogin() {
-    // You can implement your login logic here
-    String username = usernameController.text;
-    String password = passwordController.text;
-
-    // Add your authentication logic (e.g., API call, validation) here
-
-    // For this example, print the credentials to the console
-    print('Username: $username');
-    print('Password: $password');
-
-    // You can navigate to the next screen or perform any other action after login
   }
 }
 

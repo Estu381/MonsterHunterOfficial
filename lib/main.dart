@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mhofficial/admin_page.dart';
+import 'admin_page.dart';
 import 'about_page.dart';
 import 'contact_page.dart';
-import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -123,24 +122,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Tooltip(
-            message: 'Admin',
+            message: 'Account',
             child: IconButton(
               icon: Icon(Icons.account_circle),
-              onPressed: () async {
-                // Navigasi ke halaman AdminPage dan tunggu hasilnya
-                final newSlideImage = await Navigator.push(
+              onPressed: () {
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => AdminPage(slideImages: slideImages, gameImages: gameImages),
-                  ),
+                  MaterialPageRoute(builder: (context) => AdminPage()),
                 );
-
-                // Jika ada gambar baru, tambahkan ke daftar gambar slide
-                if (newSlideImage != null && newSlideImage is String) {
-                  setState(() {
-                    slideImages.add(newSlideImage);
-                  });
-                }
               },
             ),
           ),
@@ -161,7 +150,6 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Slideshow menggunakan PageView
             Container(
               height: 185.0,
               color: Colors.purple[100],
@@ -185,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            // Teks "OUR GAMES" di luar PageView pada latar belakang hitam
             Container(
               color: Colors.black,
               padding: EdgeInsets.symmetric(vertical: 10),
@@ -193,14 +180,13 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   '**OUR GAMES**',
                   style: TextStyle(
-                    color: Colors.white, // Warna teks putih
+                    color: Colors.white,
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            // GridView untuk menampilkan gambar game dengan lebar 1/3 dari lebar layar
             Container(
               padding: EdgeInsets.all(16.0),
               child: GridView.builder(
@@ -215,7 +201,6 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      // Implementasi aksi saat gambar game diklik
                       print('Game ${index + 1} clicked!');
                     },
                     child: Container(
@@ -228,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                             gameImages[index],
                             fit: BoxFit.contain,
                           ),
-                          SizedBox(height: 8.0), // Spasi antara gambar dan teks
+                          SizedBox(height: 8.0),
                         ],
                       ),
                     ),
@@ -236,7 +221,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            // Teks "NEWS" di bawah gambar game
             Container(
               color: Colors.black,
               padding: EdgeInsets.symmetric(vertical: 10),
@@ -244,22 +228,20 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   '**NEWS**',
                   style: TextStyle(
-                    color: Colors.white, // Warna teks putih
+                    color: Colors.white,
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            // Kartu "NEWS" dengan lebar 5 dan drop shadow
             Container(
               margin: EdgeInsets.all(16.0),
               child: Column(
                 children: List.generate(5, (index) {
-                  String newsImage = newsImages[index % newsImages.length]; // Siklus gambar berita yang berbeda
+                  String newsImage = newsImages[index % newsImages.length];
                   return GestureDetector(
                     onTap: () {
-                      // Implementasi aksi saat kartu berita diklik
                       print('News ${index + 1} clicked!');
                     },
                     child: Container(
@@ -273,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),
@@ -290,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(height: 8.0),
                           Text(
-                            newsHeadlines[index], // Tampilkan headline
+                            newsHeadlines[index],
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -301,7 +283,6 @@ class _HomePageState extends State<HomePage> {
                             newsContents[index],
                             style: TextStyle(fontSize: 16.0),
                           ),
-                          // Add any other content or widgets related to news
                         ],
                       ),
                     ),
@@ -309,11 +290,8 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
             ),
-
-            // Konten lainnya di bawah slideshow
             Container(
               color: Colors.black,
-              // Gantilah dengan konten atau widget lain yang diinginkan
               child: Center(
                 child: Text(
                   '', // Kosongkan teks
@@ -328,7 +306,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Color(0xFF4E2208), // Warna latar belakang BottomAppBar
+        color: Color(0xFF4E2208),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
@@ -336,7 +314,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  // Navigasi ke halaman copyright
                   print('Copyright clicked!');
                 },
                 child: Text(
@@ -349,7 +326,6 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Navigasi ke halaman terms
                   print('Terms clicked!');
                 },
                 child: Text(
@@ -362,7 +338,6 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Navigasi ke halaman privacy policy
                   print('Privacy Policy clicked!');
                 },
                 child: Text(
@@ -375,7 +350,6 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Navigasi ke halaman cookie policy
                   print('Cookie Policy clicked!');
                 },
                 child: Text(
